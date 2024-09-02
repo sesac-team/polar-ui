@@ -1,5 +1,5 @@
 # base image
-FROM node:22-alpine
+FROM node:22-alpine as build
 
 # set working directory
 WORKDIR /usr/src/app
@@ -15,7 +15,7 @@ RUN ng build --prod
 
 # stage 2 - the production environment
 FROM nginx:alpine
-COPY --from=0 /usr/src/app/dist/polar-ui /usr/share/nginx/html
+COPY --from=build /usr/src/app/dist /usr/share/nginx/html
 
 EXPOSE 80
 CMD ["nginx", "-g", "daemon off;"]
